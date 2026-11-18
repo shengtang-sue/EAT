@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>感官風味診斷書 - 獨立鑑定檔案室</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cormorant Garamond', serif; background-color: #0F0A08; color: #EAE4D3; margin: 0; padding: 0; }
+        h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
+        .gold-border { border: 1px solid #C5A059; }
+        .gold-text { color: #C5A059; }
+        .glass-box { 
+            background: rgba(20, 15, 12, 0.85); 
+            backdrop-filter: blur(12px); 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.9); 
+            border: 1px solid rgba(197, 160, 89, 0.3); 
+        }
+        .stamp-seal {
+            width: 90px; height: 90px; border-radius: 50%;
+            background: radial-gradient(circle, #5E1914 0%, #3A0303 70%, #1A0000 100%);
+            border: 2px dashed #C5A059;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px rgba(94, 25, 20, 0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-x-hidden">
+    <!-- 背景裝飾微光 -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(36,58,82,0.15)_0%,transparent_70%)] pointer-events-none"></div>
+
+    <div class="max-w-3xl w-full mx-auto relative z-10 glass-box p-8 md:p-12 rounded-sm border-[#C5A059]">
+        <header class="text-center mb-10 border-b border-[#C5A059] border-opacity-30 pb-6">
+            <span class="text-xs cinzel tracking-[0.3em] text-[#C5A059] block mb-2">SENSORY ANATOMY CONSULTANCY</span>
+            <h1 class="text-3xl md:text-4xl text-[#C5A059] cinzel mb-2">感官風味診斷書</h1>
+            <p class="text-sm italic text-gray-400">「每一滴眼淚與失衡，都是值得被精確歸檔的標本。」</p>
+        </header>
+
+        <!-- 診斷測驗區 -->
+        <div id="quiz-container" class="space-y-8">
+            <div class="text-center mb-6">
+                <span id="question-counter" class="cinzel text-xs text-gray-400 tracking-widest uppercase">Query 01 / 04</span>
+                <h2 id="question-title" class="text-2xl text-[#EAE4D3] mt-2 font-serif">當情緒在深夜瀕臨全面崩潰時，您的第一本能是？</h2>
+            </div>
+            
+            <div id="options-container" class="space-y-4">
+                <!-- 動態選項由 JS 生成 -->
+            </div>
+        </div>
+
+        <!-- 診斷結果區 (預設隱藏) -->
+        <div id="result-container" class="hidden space-y-6 text-center animate-fade-in">
+            <div class="flex justify-center my-4">
+                <div class="stamp-seal">
+                    <span class="cinzel text-xs text-[#C5A059] font-bold tracking-widest">VERIFIED</span>
+                </div>
+            </div>
+            <h2 class="text-2xl text-[#C5A059] cinzel">鑑定報告已生成</h2>
+            <div class="p-6 bg-black/40 border border-[#C5A059]/40 text-left rounded-sm space-y-4 font-serif">
+                <div class="flex justify-between border-b border-gray-800 pb-2">
+                    <span class="text-gray-400">受檢對象：</span>
+                    <span id="res-subject" class="text-[#EAE4D3]">未具名訪客</span>
+                </div>
+                <div class="flex justify-between border-b border-gray-800 pb-2">
+                    <span class="text-gray-400">主導風味：</span>
+                    <span id="res-flavor" class="text-[#C5A059] font-bold">迷幻幻覺萃取</span>
+                </div>
+                <div class="flex justify-between border-b border-gray-800 pb-2">
+                    <span class="text-gray-400">可可純度與崩壞指數：</span>
+                    <span id="res-purity" class="text-[#EAE4D3]">88.5% 崩落邊緣</span>
+                </div>
+                <div>
+                    <span class="text-gray-400 block mb-1">顧問解剖筆記：</span>
+                    <p id="res-comment" class="italic text-gray-300 text-sm leading-relaxed">「指尖在顫抖，而你正享受這種失序的美感。完美的高純度實驗體。」</p>
+                </div>
+            </div>
+
+            <div class="pt-4 flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="restartQuiz()" class="px-6 py-3 border border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-black transition-all cinzel text-sm">
+                    重新進行解剖 (RE-ANALYZE)
+                </button>
+                <button onclick="window.location.href='#'" class="px-6 py-3 bg-[#3A0303] text-[#EAE4D3] border border-[#C5A059] hover:bg-[#600000] transition-all cinzel text-sm">
+                    將此風味帶入生誕祭獻禮 (SEAL & ARCHIVE)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                title: "當情緒在深夜瀕臨全面崩潰時，您的第一本能是？",
+                options: [
+                    { text: "冷靜地吞下苦澀，任由理智慢慢剝落", flavor: "迷幻", purity: "85%", comment: "「優雅地看著自己失控，最迷人的病理狀態。」" },
+                    { text: "在歇斯底里中渴望被精準凝視與掌控", flavor: "狂熱", purity: "92%", comment: "「對於痛苦的絕對獻祭，令人讚嘆的殉道美學。」" },
+                    { text: "任由內心徹底碎裂，像玻璃般散落滿地", flavor: "崩潰", purity: "96%", comment: "「完整毫無意義，碎裂的剖面纔看得見真實。」" },
+                    { text: "在安靜的腐敗中感受生命的緩慢流逝", flavor: "腐敗", purity: "90%", comment: "「時間在腐朽中顯得格外緩慢而珍貴。」" }
+                ]
+            },
+            {
+                title: "對於『完美』與『崩壞』，您更傾向於欣賞哪一種狀態？",
+                options: [
+                    { text: "花瓣在無聲中枯萎、逐漸失去水分的過程", flavor: "腐敗", purity: "89%", comment: "「對死寂與消亡有著近乎偏執的溫柔。」" },
+                    { text: "雕像因風蝕而碎裂、殘缺不全的邊角", flavor: "崩潰", purity: "94%", comment: "「不完美的裂縫，是靈魂洩漏的唯一出口。」" },
+                    { text: "說謊時指尖微微顫抖、眼神閃爍的角度", flavor: "迷幻", purity: "87%", comment: "「連謊言都如此工整，值得逐格編目歸檔。」" },
+                    { text: "在劇痛後歸於寂靜的絕對空白", flavor: "狂熱", purity: "91%", comment: "「狂熱的盡頭，是冰冷而純粹的虛無。」" }
+                ]
+            },
+            {
+                title: "若要將您的靈魂做成一道料理，您希望它是？",
+                options: [
+                    { text: "苦澀中帶著迷幻氣息的 85% 黑巧克力慕斯", flavor: "迷幻", purity: "88%", comment: "「苦味是誘捕獵物最優雅的陷阱。」" },
+                    { text: "被烈火炙烤、帶著焦香與血水的殘骸", flavor: "狂熱", purity: "95%", comment: "「高溫烹調下的嘶吼，是最美妙的交響。」" },
+                    { text: "表面精緻但內部已經徹底餿掉的酥皮塔", flavor: "腐敗", purity: "92%", comment: "「金玉其外，敗絮其中的致命吸引力。」" },
+                    { text: "落地瞬間四分五裂的糖工藝術品", flavor: "崩潰", purity: "97%", comment: "「華麗的毀滅，是造物者最高級的惡意。」" }
+                ]
+            },
+            {
+                title: "您心目中最完美的關係是？",
+                options: [
+                    { text: "你深陷他掌控，你失衡他冷靜觀察", flavor: "狂熱", purity: "99%", comment: "「絕對的依附與解剖，不需要對等的施與受。」" },
+                    { text: "在彼此的裂縫中看見最不堪的真實", flavor: "崩潰", purity: "93%", comment: "「互相撕開傷口，然後並肩欣賞殘缺。」" },
+                    { text: "保持禮貌的距離，卻對彼此的秘密瞭如指掌", flavor: "迷幻", purity: "86%", comment: "「保持優雅的疏離，是最高級的殘忍。」" },
+                    { text: "像標本一樣被完美封存在福馬林罐中", flavor: "腐敗", purity: "91%", comment: "「停止生長，便能永遠維持在腐壞的瞬間。」" }
+                ]
+            }
+        ];
+
+        let currentQ = 0;
+        let scores = { "迷幻": 0, "狂熱": 0, "崩潰": 0, "腐敗": 0 };
+        let lastResult = null;
+
+        function renderQuiz() {
+            if (currentQ >= questions.length) {
+                showResult();
+                return;
+            }
+            document.getElementById('question-counter').innerText = `Query 0${currentQ + 1} / 04`;
+            document.getElementById('question-title').innerText = questions[currentQ].title;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            questions[currentQ].options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 border border-[#C5A059]/30 bg-black/30 hover:bg-[#3A0303]/40 hover:border-[#C5A059] transition-all rounded-sm flex items-center justify-between group";
+                btn.innerHTML = `
+                    <span class="text-lg text-[#EAE4D3] group-hover:text-white">${opt.text}</span>
+                    <span class="cinzel text-xs text-[#C5A059] opacity-0 group-hover:opacity-150 transition-opacity">SELECT ➔</span>
+                `;
+                btn.onclick = () => selectOption(opt);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectOption(opt) {
+            scores[opt.flavor]++;
+            lastResult = opt;
+            currentQ++;
+            renderQuiz();
+        }
+
+        function showResult() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('result-container').classList.remove('hidden');
+            
+            // 計算最高分風味
+            let bestFlavor = "迷幻";
+            let maxScore = -1;
+            for (let f in scores) {
+                if (scores[f] > maxScore) {
+                    maxScore = scores[f];
+                    bestFlavor = f;
+                }
+            }
+            
+            document.getElementById('res-flavor').innerText = bestFlavor + "風味切片";
+            document.getElementById('res-purity').innerText = lastResult ? lastResult.purity + " (" + bestFlavor + "指數)" : "88.5%";
+            document.getElementById('res-comment').innerText = lastResult ? lastResult.comment : "「指尖在顫抖，而你正享受這種失序的美感。」";
+        }
+
+        function restartQuiz() {
+            currentQ = 0;
+            scores = { "迷幻": 0, "狂熱": 0, "崩潰": 0, "腐敗": 0 };
+            lastResult = null;
+            document.getElementById('result-container').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            renderQuiz();
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>
